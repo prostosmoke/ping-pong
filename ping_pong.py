@@ -43,9 +43,11 @@ class Player(GameSprite):
     def update(self):
         key_pressed = key.get_pressed()
         if key_pressed[self.k_up]:
-            self.rect.y -= self.speed_y
+            if self.rect.y - self.speed_y > 0:
+                self.rect.y -= self.speed_y
         elif key_pressed[self.k_down]:
-            self.rect.y += self.speed_y
+            if self.rect.y + self.speed_y + self.rect.h < W_H:
+                self.rect.y += self.speed_y
         super().update()
 
 ball = Ball(50, 50, 30, 30, 3, 'ball.png')
@@ -62,7 +64,13 @@ while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
-            
+
+    #Правила
+    if player1.rect.colliderect(ball.rect):
+        ball.speed_x *= -1
+    if player2.rect.colliderect(ball.rect):
+        ball.speed_x *= -1
+
     #отрисовка
     window.fill(BG_COLOR)
     ball.update()
